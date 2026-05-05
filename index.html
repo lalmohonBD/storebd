@@ -443,7 +443,10 @@
     </div>
 
     <!-- Brands -->
-    
+    <div class="brands-card fade-up">
+      <div class="card-title">🏷️ আপনার ব্র্যান্ডসমূহ</div>
+      <div class="brand-chips" id="brandChips"></div>
+    </div>
 
     <!-- Actions -->
     <div class="action-wrap fade-up">
@@ -474,10 +477,10 @@
   <div class="submit-content">
     <div class="card fade-up">
       <div class="form-group">
-        <label class="form-label">📱 মোবাইল নম্বর (প্রাপ্তবয়স্ক হতে হবে 18+)</label>
+        <label class="form-label">📱 মোবাইল নম্বর</label>
         <input id="inputPhone" class="form-input" type="tel" placeholder="01XXXXXXXXX"
           maxlength="11" inputmode="numeric" oninput="this.value=this.value.replace(/\D/g,'')" />
-        <p class="hint-text">11 সংখ্যার বাংলাদেশি নম্বর (01 দিয়ে শুরু)</p>
+        <p class="hint-text">১১ সংখ্যার বাংলাদেশি নম্বর (01 দিয়ে শুরু)</p>
       </div>
 
       <div class="form-group" id="brandGroup">
@@ -513,7 +516,7 @@
   // ══════════════════════════════════════════
   // CONFIG — আপনার Apps Script URL এখানে দিন
   // ══════════════════════════════════════════
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwVr8wN7Btyv9wMs1qN0Czht6Tr_eM-LzVgX3dDD-IMcOk_2FHK3u6UDx0dVVvu64LV/exec';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz1sB5kzzz36_bGmASeGmcBbwrBntmyq2Is-nFzchj1kToe0eJusLLqr2qrkf7v059S/exec';
 
   // ══════════════════════════════════════════
   // STATE
@@ -564,19 +567,14 @@
   // ══════════════════════════════════════════
   // API
   // ══════════════════════════════════════════
+  // সব request GET দিয়ে — CORS সমস্যা এড়ানো
   async function apiGet(params) {
     const url = new URL(APPS_SCRIPT_URL);
     Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
-    const res = await fetch(url.toString());
-    return res.json();
-  }
-
-  async function apiPost(body) {
-    const res = await fetch(APPS_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify(body)
-    });
-    return res.json();
+    const res = await fetch(url.toString(), { redirect: 'follow' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    return JSON.parse(text);
   }
 
   // ══════════════════════════════════════════
@@ -744,11 +742,11 @@
 
     setLoading(true, 'জমা হচ্ছে...');
     try {
-      const data = await apiPost({
+      const data = await apiGet({
         action: 'submitNumber',
         retailer_id: currentRetailer.retailer_id,
         phone_number: phone,
-        brand
+        brand: brand
       });
       if (data.success) {
         showToast('✅ সফলভাবে জমা হয়েছে!');
