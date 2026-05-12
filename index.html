@@ -109,13 +109,46 @@ tbody td{padding:8px 12px;vertical-align:middle;}
 .fld-m .inp{padding:8px 11px;font-size:13px;border-radius:8px;}.fld-full{grid-column:1/-1;}
 .upload-zone{border:2px dashed var(--bdr);border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--surf);}
 .upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:var(--bl);}
+.rp-bar-wrap{display:flex;align-items:center;gap:8px;}
+.rp-bar{height:8px;border-radius:99px;overflow:hidden;background:#e5e7eb;flex:1;min-width:80px;}
+.rp-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--green),#34d399);transition:width .6s;}
 .pbar{height:7px;background:var(--bdr);border-radius:99px;overflow:hidden;margin:8px 0;}
 .pfill{height:100%;background:var(--green);border-radius:99px;transition:width .3s;}
 .alert{padding:10px 13px;border-radius:8px;font-size:12px;font-weight:600;margin-bottom:10px;}
 .alert-blue{background:var(--bl);color:#1e40af;border:1px solid #93c5fd;}
 .alert-amber{background:var(--al);color:#92400e;border:1px solid #fde68a;}
-@media(max-width:900px){.sg{grid-template-columns:1fr 1fr;}}
-@media(max-width:768px){.sidebar{display:none;}.content{margin-left:0;}.mbody{padding:12px;}}
+@media(max-width:1100px){.sg{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:900px){.sg{grid-template-columns:repeat(3,1fr);}.tbar h1{font-size:14px;}}
+.mob-sidebar{position:fixed;inset:0;z-index:150;display:none;}
+.mob-sidebar.open{display:flex;}
+.mob-overlay{flex:1;background:rgba(0,0,0,.5);}
+.mob-panel{width:230px;background:#1e293b;display:flex;flex-direction:column;overflow-y:auto;}
+@media(max-width:768px){
+  #mob-menu-btn{display:flex!important;}
+  .sidebar{display:none;}
+  .content{margin-left:0;}
+  .mbody{padding:10px;}
+  .sg{grid-template-columns:1fr 1fr;}
+  .ch{flex-direction:column;align-items:flex-start;}
+  .ch-r{width:100%;flex-wrap:wrap;}
+  .toolbar{flex-direction:column;align-items:stretch;}
+  .srch,.fsel{width:100%;min-width:unset;}
+  .btn{font-size:11px;padding:6px 10px;}
+  .tbar{padding:10px 14px;}
+  .tbar h1{font-size:14px;}
+  .tbar-r .pill{display:none;}
+  table{font-size:11px;}
+  thead th{padding:6px 8px;}
+  tbody td{padding:6px 8px;}
+  .form-grid{grid-template-columns:1fr;}
+  .fld-full{grid-column:1;}
+  .modal{max-width:100%;border-radius:10px;}
+  .lbox{padding:24px 18px;}
+}
+@media(max-width:480px){
+  .sg{grid-template-columns:1fr 1fr;}
+  .sc .num{font-size:20px;}
+}
 </style>
 </head>
 <body>
@@ -149,7 +182,10 @@ tbody td{padding:8px 12px;vertical-align:middle;}
 
   <div class="content">
     <div class="tbar">
-      <h1 id="secTitle">Overview</h1>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="rbtn" id="mob-menu-btn" onclick="toggleMobMenu()" style="display:none;"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg></button>
+        <h1 id="secTitle">Overview</h1>
+      </div>
       <div class="tbar-r">
         <span class="pill pill-blue" id="mBadge">—</span>
         <span class="pill pill-green" id="adminBadge">—</span>
@@ -160,6 +196,7 @@ tbody td{padding:8px 12px;vertical-align:middle;}
 
       <!-- OVERVIEW -->
       <div class="sec active" id="sec-overview">
+        <!-- Stat Cards -->
         <div class="sg" style="grid-template-columns:repeat(5,1fr);">
           <div class="sc"><div class="ico ib">👥</div><div class="num nb" id="ov-r">—</div><div class="lbl">মোট Retailer</div></div>
           <div class="sc"><div class="ico ig">✅</div><div class="num ng" id="ov-s">—</div><div class="lbl">এই মাসে জমা</div></div>
@@ -167,23 +204,44 @@ tbody td{padding:8px 12px;vertical-align:middle;}
           <div class="sc"><div class="ico ia">🎯</div><div class="num na" id="ov-t">—</div><div class="lbl">মোট Target</div></div>
           <div class="sc"><div class="ico ip">📊</div><div class="num np" id="ov-p">—%</div><div class="lbl">Achievement</div></div>
         </div>
-        <div class="g2">
-          <div class="card">
-            <div class="ch"><div class="ch-l"><h3>📅 তারিখ অনুযায়ী Count</h3><p>এই মাসের প্রতিদিন</p></div><button class="btn btn-gray btn-sm" onclick="exportDateCSV()">⬇️ CSV</button></div>
-            <div class="cwrap"><div class="cbars" id="ov-bars"></div><div class="caxis"><span>১</span><span id="ov-mid"></span><span id="ov-last"></span></div></div>
-            <div style="overflow-y:auto;max-height:160px;"><table><thead><tr><th>তারিখ</th><th>জমা</th></tr></thead><tbody id="ov-dtbl"></tbody></table></div>
-            <div class="dpwrap" id="ov-pills"></div>
+
+        <!-- Date chart -->
+        <div class="card">
+          <div class="ch"><div class="ch-l"><h3>📅 তারিখ অনুযায়ী Count</h3><p>এই মাসের প্রতিদিন মোট জমা</p></div><button class="btn btn-gray btn-sm" onclick="exportDateCSV()">⬇️ CSV</button></div>
+          <div class="cwrap"><div class="cbars" id="ov-bars"></div><div class="caxis"><span>১</span><span id="ov-mid"></span><span id="ov-last"></span></div></div>
+          <div class="dpwrap" id="ov-pills"></div>
+        </div>
+
+        <!-- Route Performance -->
+        <div class="card">
+          <div class="ch">
+            <div class="ch-l"><h3>🗺️ Route Wise Performance</h3><p id="rp-sub">এই মাসের route ভিত্তিক summary</p></div>
+            <div class="ch-r">
+              <input class="srch" id="rp-srch" type="text" placeholder="🔍 Route search..." oninput="filterRoutePerf()" style="min-width:140px;max-width:180px;">
+              <select class="fsel" id="rp-filter" onchange="filterRoutePerf()"><option value="">All Routes</option></select>
+              <button class="btn btn-green btn-sm" onclick="exportRouteCSV()">⬇️ CSV</button>
+            </div>
           </div>
-          <div class="card">
-            <div class="ch"><div class="ch-l"><h3>🏷️ Brand Count</h3><p>এই মাসে</p></div></div>
-            <div style="overflow-y:auto;max-height:260px;"><table><thead><tr><th>Brand</th><th>জমা</th><th>%</th></tr></thead><tbody id="ov-btbl"></tbody></table></div>
+          <div class="tbl-wrap">
+            <table><thead><tr>
+              <th>#</th><th>Route Name</th><th>Retailers</th><th>Target</th><th>জমা</th><th>বাকি</th><th>%</th><th>Progress</th>
+            </tr></thead>
+            <tbody id="rp-tbody"><tr class="lr"><td colspan="8">⏳ লোড হচ্ছে...</td></tr></tbody></table>
           </div>
         </div>
+
+        <!-- Retailer Performance -->
         <div class="card">
-          <div class="ch"><div class="ch-l"><h3>📋 Retailer Performance</h3><p>এই মাসের summary</p></div><button class="btn btn-green btn-sm" onclick="exportOvCSV()">⬇️ CSV</button></div>
-          <div class="toolbar"><input class="srch" type="text" placeholder="🔍 Search..." oninput="filterOvTable(this.value)"></div>
-          <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Retailer ID</th><th>Name</th><th>Target</th><th>জমা</th><th>বাকি</th><th>%</th><th>তারিখ</th></tr></thead>
-          <tbody id="ov-tbody"><tr class="lr"><td colspan="8">⏳ লোড হচ্ছে...</td></tr></tbody></table></div>
+          <div class="ch">
+            <div class="ch-l"><h3>📋 Retailer Performance</h3><p>এই মাসের retailer ভিত্তিক performance</p></div>
+            <div class="ch-r">
+              <input class="srch" id="perf-srch" type="text" placeholder="🔍 Search..." oninput="filterPerfTable()" style="min-width:140px;max-width:180px;">
+              <select class="fsel" id="perf-route" onchange="filterPerfTable()"><option value="">All Routes</option></select>
+              <button class="btn btn-green btn-sm" onclick="exportOvCSV()">⬇️ CSV</button>
+            </div>
+          </div>
+          <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Retailer ID</th><th>Name</th><th>Route</th><th>Target</th><th>জমা</th><th>বাকি</th><th>%</th><th>তারিখ</th></tr></thead>
+          <tbody id="ov-tbody"><tr class="lr"><td colspan="9">⏳ লোড হচ্ছে...</td></tr></tbody></table></div>
         </div>
       </div>
 
@@ -227,8 +285,8 @@ tbody td{padding:8px 12px;vertical-align:middle;}
             <select class="fsel" id="s-mfil" onchange="filterSubs()"><option value="">All Months</option></select>
             <select class="fsel" id="s-yfil" onchange="filterSubs()"><option value="">All Years</option></select>
           </div>
-          <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Retailer ID</th><th>Outlet Code</th><th>Route Name</th><th>Phone</th><th>নাম</th><th>Brand</th><th>Date</th></tr></thead>
-          <tbody id="s-tbody"><tr class="lr"><td colspan="8">⏳ লোড হচ্ছে...</td></tr></tbody></table></div>
+          <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Date & Time</th><th>Retailer ID</th><th>Retailer নাম</th><th>Outlet Code</th><th>Route Name</th><th>Phone</th><th>ভোক্তার নাম</th><th>Brand</th></tr></thead>
+          <tbody id="s-tbody"><tr class="lr"><td colspan="9">⏳ লোড হচ্ছে...</td></tr></tbody></table></div>
         </div>
       </div>
     </div>
@@ -301,6 +359,25 @@ tbody td{padding:8px 12px;vertical-align:middle;}
   </div>
 </div>
 
+<!-- MOBILE SIDEBAR -->
+<div class="mob-sidebar" id="mobSidebar">
+  <div class="mob-panel">
+    <div class="slogo" style="padding:14px;">
+      <div class="si"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+      <h2>Admin Panel</h2>
+    </div>
+    <nav style="padding:8px;">
+      <button class="ni active" onclick="showSec('overview');closeMobMenu()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Overview</button>
+      <button class="ni" onclick="showSec('retailers');closeMobMenu()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>All Retailers</button>
+      <button class="ni" onclick="showSec('submissions');closeMobMenu()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>All Submissions</button>
+    </nav>
+    <div style="padding:10px 8px;border-top:1px solid rgba(255,255,255,.08);margin-top:auto;">
+      <button class="lout" onclick="doLogout()">লগআউট</button>
+    </div>
+  </div>
+  <div class="mob-overlay" onclick="closeMobMenu()"></div>
+</div>
+
 <script>
 const firebaseConfig={apiKey:"AIzaSyCrqiyCqWFskHEoHDhe8g0ZXp2ohR2e3Oc",authDomain:"retailer-app-live.firebaseapp.com",databaseURL:"https://retailer-app-live-default-rtdb.asia-southeast1.firebasedatabase.app/"};
 firebase.initializeApp(firebaseConfig);
@@ -330,6 +407,8 @@ auth.onAuthStateChanged(user=>{
     document.getElementById('loginPage').classList.remove('hidden');
   }
 });
+function toggleMobMenu(){document.getElementById('mobSidebar').classList.toggle('open');}
+function closeMobMenu(){document.getElementById('mobSidebar').classList.remove('open');}
 function doLogin(){
   const email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPass').value.trim();
   const btn=document.getElementById('loginBtn'),err=document.getElementById('loginErr');
@@ -360,21 +439,37 @@ async function loadAll(){
 }
 
 // OVERVIEW
+let routePerfData = [];
 function renderOverview(){
-  const rIds=Object.keys(allR),td=today(),D=dim();
-  let totalT=0,totalS=0;const gDM={},gBM={};
+  const rIds=Object.keys(allR), td=today(), D=dim();
+  let totalT=0, totalS=0;
+  const gDM={};
+  // Route aggregation: {routeName: {target, submitted, retailers}}
+  const routeMap={};
+
   rIds.forEach(id=>{
-    totalT+=parseInt(allR[id].target)||0;
+    const r=allR[id];
+    const target=parseInt(r.target)||0;
+    totalT+=target;
     const entries=Object.values((allS[id]||{})[curMY]||{});
     totalS+=entries.length;
-    entries.forEach(e=>{const{day:d}=parseTime(e.time);if(d)gDM[d]=(gDM[d]||0)+1;const b=e.brand||'Unknown';gBM[b]=(gBM[b]||0)+1;});
+    entries.forEach(e=>{const{day:d}=parseTime(e.time);if(d)gDM[d]=(gDM[d]||0)+1;});
+    // Route grouping
+    const rn=r.route_name||'(No Route)';
+    if(!routeMap[rn]) routeMap[rn]={target:0,submitted:0,retailers:[]};
+    routeMap[rn].target+=target;
+    routeMap[rn].submitted+=entries.length;
+    routeMap[rn].retailers.push(r.name||id);
   });
+
   const todayCnt=gDM[td]||0;
   document.getElementById('ov-r').innerText=rIds.length;
   document.getElementById('ov-s').innerText=totalS;
   document.getElementById('ov-td').innerText=todayCnt;
   document.getElementById('ov-t').innerText=totalT;
   document.getElementById('ov-p').innerText=totalT>0?Math.round((totalS/totalT)*100)+'%':'—%';
+
+  // Date bar chart
   document.getElementById('ov-mid').innerText=Math.round(D/2);
   document.getElementById('ov-last').innerText=D;
   const max=Math.max(...Object.values(gDM),1);
@@ -382,30 +477,108 @@ function renderOverview(){
     const d=i+1,cnt=gDM[d]||0,h=Math.max(cnt>0?4:2,Math.round((cnt/max)*54));
     return `<div class="bcol"><div class="bar" style="height:${h}px;background:${d===td?'var(--green)':'var(--blue)'};opacity:${cnt===0?.15:1};">${cnt>0?`<span class="btip">${d}ই: ${cnt}</span>`:''}</div><div class="bday">${d%5===0||d===1?d:''}</div></div>`;
   }).join('');
-  document.getElementById('ov-dtbl').innerHTML=Object.keys(gDM).map(Number).sort((a,b)=>b-a).map(d=>`<tr><td style="font-weight:700;${d===td?'color:var(--green)':''}">${d} তারিখ${d===td?' 🟢':''}</td><td><span class="b bb">${gDM[d]} টি</span></td></tr>`).join('')||'<tr class="er"><td colspan="2">কোনো data নেই</td></tr>';
+
+  // Date pills
   document.getElementById('ov-pills').innerHTML=Object.keys(gDM).map(Number).sort((a,b)=>a-b).map(d=>`<span class="dp${d===td?' today':''}">${d} তারিখ<span class="dc">${gDM[d]}</span></span>`).join('')||'<span style="font-size:11px;color:var(--tx3);">কোনো data নেই</span>';
-  const tot=Object.values(gBM).reduce((a,b)=>a+b,0);
-  document.getElementById('ov-btbl').innerHTML=Object.entries(gBM).sort((a,b)=>b[1]-a[1]).map(([b,cnt])=>`<tr><td style="font-weight:600;">${esc(b)}</td><td><span class="b ba">${cnt} টি</span></td><td style="font-weight:700;color:var(--purple);">${tot>0?Math.round((cnt/tot)*100):0}%</td></tr>`).join('')||'<tr class="er"><td colspan="3">—</td></tr>';
-  document.getElementById('ov-tbody').innerHTML=rIds.map((id,i)=>{
+
+  // Route performance table
+  routePerfData=Object.entries(routeMap).sort((a,b)=>b[1].submitted-a[1].submitted);
+  // Populate route filters
+  ['rp-filter','perf-route'].forEach(selId=>{
+    const sel=document.getElementById(selId);
+    while(sel&&sel.options.length>1) sel.remove(1);
+    routePerfData.forEach(([rn])=>{const o=document.createElement('option');o.value=rn;o.innerText=rn;sel&&sel.appendChild(o);});
+  });
+  renderRouteTable(routePerfData);
+  renderPerfTable(rIds);
+}
+
+function renderPerfTable(ids){
+  const td=today(),MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  document.getElementById('ov-tbody').innerHTML=ids.map((id,i)=>{
     const r=allR[id],entries=Object.values((allS[id]||{})[curMY]||{});
     const sub=entries.length,target=parseInt(r.target)||0,rem=Math.max(0,target-sub);
     const p=target>0?Math.min(100,Math.round((sub/target)*100)):0;
     const bc=p>=100?'bg':p>=50?'ba':'br';
     const dm={};entries.forEach(e=>{const{day:d}=parseTime(e.time);if(d)dm[d]=(dm[d]||0)+1;});
     const pills=Object.keys(dm).map(Number).sort((a,b)=>a-b).map(d=>`<span class="dp${d===td?' today':''}" style="padding:1px 5px;font-size:8px;">${d}ই<span class="dc">${dm[d]}</span></span>`).join('');
-    return `<tr><td style="color:var(--tx3);font-weight:600;">${i+1}</td><td><span class="b bb">${esc(id)}</span></td><td style="font-weight:600;">${esc(r.name)}</td><td style="color:var(--blue);font-weight:700;">${target}</td><td style="color:var(--green);font-weight:700;">${sub}</td><td style="color:var(--red);font-weight:700;">${rem}</td><td><span class="b ${bc}">${p}%</span><span class="prog" style="width:50px;"><span class="pf" style="width:${p}%"></span></span></td><td><div style="display:flex;flex-wrap:wrap;gap:2px;">${pills||'—'}</div></td></tr>`;
-  }).join('')||'<tr class="er"><td colspan="8">কোনো Retailer নেই</td></tr>';
+    return `<tr>
+      <td style="color:var(--tx3);font-weight:600;">${i+1}</td>
+      <td><span class="b bb">${esc(id)}</span></td>
+      <td style="font-weight:600;">${esc(r.name||'—')}</td>
+      <td>${esc(r.route_name||'—')}</td>
+      <td style="color:var(--blue);font-weight:700;">${target}</td>
+      <td style="color:var(--green);font-weight:700;">${sub}</td>
+      <td style="color:var(--red);font-weight:700;">${rem}</td>
+      <td><span class="b ${bc}">${p}%</span><span class="prog" style="width:50px;"><span class="pf" style="width:${p}%"></span></span></td>
+      <td><div style="display:flex;flex-wrap:wrap;gap:2px;">${pills||'—'}</div></td>
+    </tr>`;
+  }).join('')||'<tr class="er"><td colspan="9">কোনো Retailer নেই</td></tr>';
 }
-function filterOvTable(v){document.querySelectorAll('#ov-tbody tr').forEach(r=>{r.style.display=r.innerText.toLowerCase().includes(v.toLowerCase())?'':'none';});}
 
-// RETAILERS
+function filterPerfTable(){
+  const s=(document.getElementById('perf-srch')?.value||'').toLowerCase();
+  const route=document.getElementById('perf-route')?.value||'';
+  const ids=Object.keys(allR).filter(id=>{
+    const r=allR[id];
+    return(!route||(r.route_name||'')===route)&&(!s||id.toLowerCase().includes(s)||(r.name||'').toLowerCase().includes(s)||(r.route_name||'').toLowerCase().includes(s));
+  });
+  renderPerfTable(ids);
+}
+
+function renderRouteTable(data){
+  document.getElementById('rp-sub').innerText=`এই মাসে ${data.length} টি route`;
+  // Table only
+  document.getElementById('rp-tbody').innerHTML=data.map(([rn,rv],i)=>{
+    const p=rv.target>0?Math.min(100,Math.round((rv.submitted/rv.target)*100)):0;
+    const bc=p>=100?'var(--green)':p>=70?'var(--amber)':'var(--red)';
+    const label=p>=100?'bg':p>=70?'ba':'br';
+    return `<tr>
+      <td style="color:var(--tx3);font-weight:600;">${i+1}</td>
+      <td style="font-weight:700;">${esc(rn)}</td>
+      <td><span class="b bb">${rv.retailers.length} জন</span></td>
+      <td style="font-weight:700;color:var(--blue);">${rv.target}</td>
+      <td style="font-weight:700;color:var(--green);">${rv.submitted}</td>
+      <td style="font-weight:700;color:var(--red);">${Math.max(0,rv.target-rv.submitted)}</td>
+      <td><span class="b ${label}">${p}%</span></td>
+      <td><div style="display:flex;align-items:center;gap:6px;"><div style="width:80px;height:6px;background:#e5e7eb;border-radius:99px;overflow:hidden;"><div style="height:100%;width:${p}%;background:${bc};border-radius:99px;"></div></div><span style="font-size:10px;font-weight:700;color:${bc};">${p}%</span></div></td>
+    </tr>`;
+  }).join('')||'<tr class="er"><td colspan="8">কোনো data নেই</td></tr>';
+}
+
+function filterRoutePerf(){
+  const v=document.getElementById('rp-filter').value;
+  const s=(document.getElementById('rp-srch')?.value||'').toLowerCase();
+  let filtered=routePerfData;
+  if(v) filtered=filtered.filter(([rn])=>rn===v);
+  if(s) filtered=filtered.filter(([rn])=>rn.toLowerCase().includes(s));
+  renderRouteTable(filtered);
+}
+
+function exportRouteCSV(){
+  let csv=csvRow(['#','Route Name','Retailers','Target','জমা','বাকি','%']);
+  routePerfData.forEach(([rn,rv],i)=>{
+    const p=rv.target>0?Math.round((rv.submitted/rv.target)*100):0;
+    csv+=csvRow([i+1,rn,rv.retailers.length,rv.target,rv.submitted,Math.max(0,rv.target-rv.submitted),p+'%']);
+  });
+  dlCSV(csv,'route-performance-'+curMY+'.csv');
+}
+
+function exportOvCSV(){
+  let c=csvRow(['#','Route','Retailers','Target','জমা','বাকি','%']);
+  routePerfData.forEach(([rn,rv],i)=>{const p=rv.target>0?Math.round((rv.submitted/rv.target)*100):0;c+=csvRow([i+1,rn,rv.retailers.length,rv.target,rv.submitted,Math.max(0,rv.target-rv.submitted),p+'%']);});
+  dlCSV(c,'overview-'+curMY+'.csv');
+}
 function renderRetailers(){
   const ids=Object.keys(allR);
   document.getElementById('r-lbl').innerText=`মোট ${ids.length} জন`;
-  const rFil=document.getElementById('r-route'),ex=Array.from(rFil.options).map(o=>o.value);
+  // Populate route filter
+  const rFil=document.getElementById('r-route');
+  while(rFil.options.length>1) rFil.remove(1);
   const routes=new Set(ids.map(id=>allR[id].route_name||'').filter(Boolean));
-  routes.forEach(r=>addOpt(rFil,r,r,ex));
-  rFiltered=[...ids];renderRTable(ids);
+  [...routes].sort().forEach(r=>{const o=document.createElement('option');o.value=r;o.innerText=r;rFil.appendChild(o);});
+  rFiltered=[...ids];
+  renderRTable(ids);
 }
 function filterRetailers(){
   const s=document.getElementById('r-srch').value.toLowerCase(),route=document.getElementById('r-route').value;
@@ -621,23 +794,35 @@ function filterSubs(){
 }
 
 function renderSubTable(data){
-  const td=today();
+  const now=new Date(),td=now.getDate(),tm=now.getMonth()+1,ty=now.getFullYear();
   const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   document.getElementById('s-lbl').innerText=`দেখাচ্ছে ${data.length} টি`;
-  document.getElementById('s-tbody').innerHTML=data.map((s,i)=>{
-    const isT=s.day===td&&s.month===new Date().getMonth()+1&&s.year===new Date().getFullYear();
+  // Newest first — sort by year desc, month desc, day desc
+  const sorted=[...data].sort((a,b)=>{
+    const ay=a.year||0,by2=b.year||0,am=a.month||0,bm=b.month||0,ad=a.day||0,bd=b.day||0;
+    if(ay!==by2) return by2-ay;
+    if(am!==bm) return bm-am;
+    return bd-ad;
+  });
+  document.getElementById('s-tbody').innerHTML=sorted.map((s,i)=>{
+    const isT=s.day===td&&s.month===tm&&s.year===ty;
     const dateStr=s.day&&s.month&&s.year?`${s.day} ${MN[s.month-1]} ${s.year}`:s.day?s.day+' তারিখ':'—';
+    // Extract time part from original time string
+    const rawTime=bnToEn(s.time||'');
+    const timePart=rawTime.match(/(\d{1,2}:\d{2}(:\d{2})?\s*(AM|PM)?)/i);
+    const timeStr=timePart?timePart[0]:'';
     return `<tr>
       <td style="color:var(--tx3);font-weight:600;">${i+1}</td>
+      <td><div style="white-space:nowrap;"><span class="b ${isT?'bg':'bgr'}">${dateStr}${isT?' 🟢':''}</span>${timeStr?`<br><span style="font-size:10px;color:var(--tx2);">${timeStr}</span>`:''}</div></td>
       <td><span class="b bb">${esc(s.rId)}</span></td>
+      <td style="font-weight:600;font-size:11px;">${esc(s.rName||'—')}</td>
       <td>${esc(s.outletCode||'—')}</td>
       <td>${esc(s.routeName||'—')}</td>
       <td style="font-weight:700;">${esc(s.phone||'—')}</td>
       <td>${esc(s.consumer_name||'—')}</td>
       <td><span class="b ba">${esc(s.brand||'—')}</span></td>
-      <td><span class="b ${isT?'bg':'bgr'}" style="white-space:nowrap;">${dateStr}${isT?' 🟢':''}</span></td>
     </tr>`;
-  }).join('')||'<tr class="er"><td colspan="8">কোনো Submission নেই</td></tr>';
+  }).join('')||'<tr class="er"><td colspan="9">কোনো Submission নেই</td></tr>';
 }
 
 // BULK SUBMISSION
@@ -719,10 +904,10 @@ function exportSubsCSV(){
   const filtered=subsFlat.filter(e=>(!r||e.rId===r)&&(!oc||e.outletCode===oc)&&(!rt||e.routeName===rt)&&(!b||e.brand===b)&&(!d||String(e.day)===String(d))&&(!m||String(e.month)===String(m))&&(!y||String(e.year)===String(y))&&(!s||(e.phone||'').includes(s)||(e.consumer_name||'').toLowerCase().includes(s)||(e.brand||'').toLowerCase().includes(s)||(e.rName||'').toLowerCase().includes(s)||(e.rId||'').toLowerCase().includes(s)||(e.outletCode||'').toLowerCase().includes(s)));
   const MNC=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  let csv=csvRow(['#','Retailer ID','Outlet Code','Route Name','Phone','নাম','Brand','Day','Month','Year','Full Date']);
+  let csv=csvRow(['#','Date & Time','Retailer ID','Retailer নাম','Outlet Code','Route Name','Phone','ভোক্তার নাম','Brand']);
   filtered.forEach((e,i)=>{
     const dateStr=e.day&&e.month&&e.year?`${e.day} ${MNC[e.month-1]} ${e.year}`:e.day?e.day+' তারিখ':'—';
-    csv+=csvRow([i+1,e.rId,e.outletCode||'',e.routeName||'',e.phone||'',e.consumer_name||'',e.brand||'',e.day||'',e.month?MNC[e.month-1]:'',e.year||'',dateStr]);
+    csv+=csvRow([i+1,dateStr,e.rId,e.rName||'',e.outletCode||'',e.routeName||'',e.phone||'',e.consumer_name||'',e.brand||'']);
   });
   dlCSV(csv,'submissions-'+new Date().toISOString().slice(0,10)+'.csv');
 }
