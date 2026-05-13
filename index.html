@@ -32,6 +32,7 @@ body{font-family:'Inter',sans-serif;background:var(--surf);color:var(--tx);font-
 .slogo .si{width:36px;height:36px;background:var(--blue);border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;}
 .slogo h2{color:#fff;font-size:14px;font-weight:700;}.slogo p{color:rgba(255,255,255,.4);font-size:10px;margin-top:2px;}
 .snav{flex:1;padding:8px;overflow-y:auto;}
+.nav-label{font-size:9px;font-weight:700;color:rgba(255,255,255,.25);letter-spacing:.1em;padding:10px 12px 4px;text-transform:uppercase;}
 .ni{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:7px;color:rgba(255,255,255,.55);font-size:12px;font-weight:500;cursor:pointer;margin-bottom:2px;transition:all .15s;border:none;background:transparent;width:100%;text-align:left;font-family:inherit;}
 .ni:hover{background:rgba(255,255,255,.07);color:#fff;}.ni.active{background:rgba(37,99,235,.4);color:#fff;font-weight:600;}
 .ni svg{width:15px;height:15px;flex-shrink:0;}
@@ -117,37 +118,70 @@ tbody td{padding:8px 12px;vertical-align:middle;}
 .alert{padding:10px 13px;border-radius:8px;font-size:12px;font-weight:600;margin-bottom:10px;}
 .alert-blue{background:var(--bl);color:#1e40af;border:1px solid #93c5fd;}
 .alert-amber{background:var(--al);color:#92400e;border:1px solid #fde68a;}
+/* SUBMISSION FILTER BAR */
+.s-filter-bar{padding:12px 14px;border-bottom:1px solid var(--bdr);background:#fff;}
+.s-filter-row{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;}
+.s-filter-group{display:flex;flex-direction:column;gap:4px;flex:1;min-width:120px;}
+.filter-lbl{font-size:10px;font-weight:700;color:var(--tx2);text-transform:uppercase;letter-spacing:.04em;}
+.sinp{padding:8px 11px;border:1.5px solid var(--bdr);border-radius:8px;font-size:12px;font-family:inherit;background:var(--surf);outline:none;width:100%;transition:border .2s;}
+.sinp:focus{border-color:var(--blue);background:#fff;}
+.s-filter-badge{display:inline-flex;align-items:center;gap:4px;background:var(--bl);color:var(--blue);font-size:10px;font-weight:700;padding:3px 8px;border-radius:99px;margin:6px 14px 0;}
+
+/* MOBILE APP STYLES */
 @media(max-width:1100px){.sg{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:900px){.sg{grid-template-columns:repeat(3,1fr);}.tbar h1{font-size:14px;}}
 .mob-sidebar{position:fixed;inset:0;z-index:150;display:none;}
 .mob-sidebar.open{display:flex;}
 .mob-overlay{flex:1;background:rgba(0,0,0,.5);}
-.mob-panel{width:230px;background:#1e293b;display:flex;flex-direction:column;overflow-y:auto;}
+.mob-panel{width:240px;background:#1e293b;display:flex;flex-direction:column;overflow-y:auto;}
+
+/* MOBILE BOT NAV */
+.mob-bot-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:#1e293b;border-top:1px solid rgba(255,255,255,.1);z-index:100;padding:0 4px env(safe-area-inset-bottom,0);}
+.mob-bot-nav .nav-tabs{display:flex;align-items:stretch;}
+.mob-bot-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:8px 4px;border:none;background:transparent;color:rgba(255,255,255,.45);font-size:9px;font-weight:600;font-family:inherit;cursor:pointer;transition:color .15s;}
+.mob-bot-tab svg{width:20px;height:20px;}
+.mob-bot-tab.active{color:#fff;}
+.mob-bot-tab.active svg path{fill:#60a5fa;}
+
 @media(max-width:768px){
   #mob-menu-btn{display:flex!important;}
   .sidebar{display:none;}
-  .content{margin-left:0;}
+  .content{margin-left:0;padding-bottom:60px;}
   .mbody{padding:10px;}
   .sg{grid-template-columns:1fr 1fr;}
-  .ch{flex-direction:column;align-items:flex-start;}
+  .sg>div:last-child:nth-child(odd){grid-column:1/-1;}
+  .g2{grid-template-columns:1fr;}
+  .ch{flex-direction:column;align-items:flex-start;gap:8px;}
   .ch-r{width:100%;flex-wrap:wrap;}
-  .toolbar{flex-direction:column;align-items:stretch;}
-  .srch,.fsel{width:100%;min-width:unset;}
-  .btn{font-size:11px;padding:6px 10px;}
+  .ch-r .btn{flex:1;justify-content:center;}
+  .s-filter-row{flex-direction:column;}
+  .s-filter-group{min-width:unset;width:100%;}
+  .sinp{font-size:14px;padding:10px 12px;}
+  .btn{font-size:12px;padding:8px 12px;}
   .tbar{padding:10px 14px;}
-  .tbar h1{font-size:14px;}
+  .tbar h1{font-size:15px;}
   .tbar-r .pill{display:none;}
+  .tbar-r .rbtn:last-child{display:none;}
   table{font-size:11px;}
-  thead th{padding:6px 8px;}
-  tbody td{padding:6px 8px;}
+  thead th{padding:7px 8px;font-size:9px;}
+  tbody td{padding:7px 8px;}
   .form-grid{grid-template-columns:1fr;}
   .fld-full{grid-column:1;}
-  .modal{max-width:100%;border-radius:10px;}
+  .modal{max-width:100%;border-radius:14px 14px 0 0;position:fixed;bottom:0;left:0;right:0;max-height:92vh;}
+  .moverlay{align-items:flex-end;padding:0;}
   .lbox{padding:24px 18px;}
+  .mob-bot-nav{display:block;}
+  .card{border-radius:10px;}
+  /* Mobile table scroll hint */
+  .tbl-wrap{-webkit-overflow-scrolling:touch;}
+  /* Bigger tap targets */
+  .btn-icon{width:34px;height:34px;}
 }
 @media(max-width:480px){
   .sg{grid-template-columns:1fr 1fr;}
-  .sc .num{font-size:20px;}
+  .sc{padding:12px;}
+  .sc .num{font-size:22px;}
+  .sc .lbl{font-size:10px;}
 }
 </style>
 </head>
@@ -173,9 +207,19 @@ tbody td{padding:8px 12px;vertical-align:middle;}
       <h2>Admin Panel</h2><p>Retailer Portal</p>
     </div>
     <nav class="snav">
-      <button class="ni active" onclick="showSec('overview')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Overview</button>
-      <button class="ni" onclick="showSec('retailers')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>All Retailers</button>
-      <button class="ni" onclick="showSec('submissions')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>All Submissions</button>
+      <div class="nav-label">MAIN</div>
+      <button class="ni active" onclick="showSec('overview')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Overview</button>
+      <div class="nav-label">PERFORMANCE</div>
+      <button class="ni" onclick="showSec('routeperf')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>Route Performance</button>
+      <button class="ni" onclick="showSec('retailerperf')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14H7v-2h5v2zm5-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>Retailer Performance</button>
+      <div class="nav-label">DATA</div>
+      <button class="ni" onclick="showSec('retailers')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>All Retailers</button>
+      <button class="ni" onclick="showSec('submissions')">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>All Submissions</button>
     </nav>
     <div class="sfoot"><button class="lout" onclick="doLogout()"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>লগআউট</button></div>
   </div>
@@ -196,7 +240,6 @@ tbody td{padding:8px 12px;vertical-align:middle;}
 
       <!-- OVERVIEW -->
       <div class="sec active" id="sec-overview">
-        <!-- Stat Cards -->
         <div class="sg" style="grid-template-columns:repeat(5,1fr);">
           <div class="sc"><div class="ico ib">👥</div><div class="num nb" id="ov-r">—</div><div class="lbl">মোট Retailer</div></div>
           <div class="sc"><div class="ico ig">✅</div><div class="num ng" id="ov-s">—</div><div class="lbl">এই মাসে জমা</div></div>
@@ -205,14 +248,55 @@ tbody td{padding:8px 12px;vertical-align:middle;}
           <div class="sc"><div class="ico ip">📊</div><div class="num np" id="ov-p">—%</div><div class="lbl">Achievement</div></div>
         </div>
 
-        <!-- Date chart -->
-        <div class="card">
-          <div class="ch"><div class="ch-l"><h3>📅 তারিখ অনুযায়ী Count</h3><p>এই মাসের প্রতিদিন মোট জমা</p></div><button class="btn btn-gray btn-sm" onclick="exportDateCSV()">⬇️ CSV</button></div>
-          <div class="cwrap"><div class="cbars" id="ov-bars"></div><div class="caxis"><span>১</span><span id="ov-mid"></span><span id="ov-last"></span></div></div>
-          <div class="dpwrap" id="ov-pills"></div>
+        <div class="g2">
+          <!-- Date bar chart -->
+          <div class="card">
+            <div class="ch"><div class="ch-l"><h3>📅 তারিখ অনুযায়ী Count</h3><p>এই মাসের প্রতিদিন</p></div><button class="btn btn-gray btn-sm" onclick="exportDateCSV()">⬇️ CSV</button></div>
+            <div class="cwrap"><div class="cbars" id="ov-bars"></div><div class="caxis"><span>১</span><span id="ov-mid"></span><span id="ov-last"></span></div></div>
+            <div class="dpwrap" id="ov-pills"></div>
+          </div>
+          <!-- Pie chart — achievement -->
+          <div class="card">
+            <div class="ch"><div class="ch-l"><h3>🥧 Achievement Overview</h3><p>Target vs জমা vs বাকি</p></div></div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:24px;padding:16px 20px;">
+              <canvas id="pieChart" width="140" height="140"></canvas>
+              <div id="pieLegend" style="display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:600;"></div>
+            </div>
+            <!-- Mini stats row -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--bdr);">
+              <div style="padding:10px;text-align:center;border-right:1px solid var(--bdr);">
+                <div style="font-size:18px;font-weight:800;color:var(--green);" id="pie-done">—</div>
+                <div style="font-size:10px;color:var(--tx2);">জমা হয়েছে</div>
+              </div>
+              <div style="padding:10px;text-align:center;border-right:1px solid var(--bdr);">
+                <div style="font-size:18px;font-weight:800;color:var(--red);" id="pie-rem">—</div>
+                <div style="font-size:10px;color:var(--tx2);">বাকি আছে</div>
+              </div>
+              <div style="padding:10px;text-align:center;">
+                <div style="font-size:18px;font-weight:800;color:var(--blue);" id="pie-tgt">—</div>
+                <div style="font-size:10px;color:var(--tx2);">মোট Target</div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <!-- Route Performance -->
+        <!-- Quick overview tables side by side -->
+        <div class="g2">
+          <div class="card">
+            <div class="ch"><div class="ch-l"><h3>🗺️ Top Routes</h3><p>এই মাসের সেরা route</p></div><button class="btn btn-gray btn-sm" onclick="showSec('routeperf')">সব দেখুন →</button></div>
+            <div class="tbl-wrap"><table><thead><tr><th>Route</th><th>জমা</th><th>%</th></tr></thead>
+            <tbody id="ov-route-quick"></tbody></table></div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ch-l"><h3>🏆 Top Retailers</h3><p>এই মাসে সবচেয়ে বেশি জমা</p></div><button class="btn btn-gray btn-sm" onclick="showSec('retailerperf')">সব দেখুন →</button></div>
+            <div class="tbl-wrap"><table><thead><tr><th>Retailer</th><th>Route</th><th>জমা</th><th>%</th></tr></thead>
+            <tbody id="ov-ret-quick"></tbody></table></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROUTE PERFORMANCE -->
+      <div class="sec" id="sec-routeperf">
         <div class="card">
           <div class="ch">
             <div class="ch-l"><h3>🗺️ Route Wise Performance</h3><p id="rp-sub">এই মাসের route ভিত্তিক summary</p></div>
@@ -223,14 +307,14 @@ tbody td{padding:8px 12px;vertical-align:middle;}
             </div>
           </div>
           <div class="tbl-wrap">
-            <table><thead><tr>
-              <th>#</th><th>Route Name</th><th>Retailers</th><th>Target</th><th>জমা</th><th>বাকি</th><th>%</th><th>Progress</th>
-            </tr></thead>
+            <table><thead><tr><th>#</th><th>Route Name</th><th>Retailers</th><th>Target</th><th>জমা</th><th>বাকি</th><th>%</th><th>Progress</th></tr></thead>
             <tbody id="rp-tbody"><tr class="lr"><td colspan="8">⏳ লোড হচ্ছে...</td></tr></tbody></table>
           </div>
         </div>
+      </div>
 
-        <!-- Retailer Performance -->
+      <!-- RETAILER PERFORMANCE -->
+      <div class="sec" id="sec-retailerperf">
         <div class="card">
           <div class="ch">
             <div class="ch-l"><h3>📋 Retailer Performance</h3><p>এই মাসের retailer ভিত্তিক performance</p></div>
@@ -241,7 +325,7 @@ tbody td{padding:8px 12px;vertical-align:middle;}
             </div>
           </div>
           <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Retailer ID</th><th>Name</th><th>Route</th><th>Target</th><th>জমা</th><th>বাকি</th><th>%</th><th>তারিখ</th></tr></thead>
-          <tbody id="ov-tbody"><tr class="lr"><td colspan="9">⏳ লোড হচ্ছে...</td></tr></tbody></table></div>
+          <tbody id="ov-tbody"><tr class="lr"><td colspan="9">⏳ লোড হচ্ধে...</td></tr></tbody></table></div>
         </div>
       </div>
 
@@ -275,16 +359,32 @@ tbody td{padding:8px 12px;vertical-align:middle;}
               <button class="btn btn-green btn-sm" onclick="exportSubsCSV()">⬇️ CSV</button>
             </div>
           </div>
-          <div class="toolbar">
-            <input class="srch" id="s-srch" type="text" placeholder="🔍 Phone, Name, Brand..." oninput="filterSubs()" style="min-width:160px;">
-            <select class="fsel" id="s-rfil" onchange="filterSubs()"><option value="">All Retailer ID</option></select>
-            <select class="fsel" id="s-ocfil" onchange="filterSubs()"><option value="">All Outlet Code</option></select>
-            <select class="fsel" id="s-rtfil" onchange="filterSubs()"><option value="">All Routes</option></select>
-            <select class="fsel" id="s-bfil" onchange="filterSubs()"><option value="">All Brands</option></select>
-            <select class="fsel" id="s-dfil" onchange="filterSubs()"><option value="">All Days</option></select>
-            <select class="fsel" id="s-mfil" onchange="filterSubs()"><option value="">All Months</option></select>
-            <select class="fsel" id="s-yfil" onchange="filterSubs()"><option value="">All Years</option></select>
+          <div class="s-filter-bar">
+            <div class="s-filter-row">
+              <div class="s-filter-group">
+                <label class="filter-lbl">🔍 Search</label>
+                <input class="sinp" id="s-srch" type="text" placeholder="Phone, Name, Brand, Retailer..." oninput="filterSubs()">
+              </div>
+              <div class="s-filter-group">
+                <label class="filter-lbl">📅 Start Date</label>
+                <input class="sinp" id="s-date-from" type="date" onchange="filterSubs()">
+              </div>
+              <div class="s-filter-group">
+                <label class="filter-lbl">📅 End Date</label>
+                <input class="sinp" id="s-date-to" type="date" onchange="filterSubs()">
+              </div>
+              <div class="s-filter-group">
+                <label class="filter-lbl">🗺️ Route</label>
+                <select class="sinp" id="s-rtfil" onchange="filterSubs()"><option value="">All Routes</option></select>
+              </div>
+              <div class="s-filter-group">
+                <label class="filter-lbl">🏷️ Brand</label>
+                <select class="sinp" id="s-bfil" onchange="filterSubs()"><option value="">All Brands</option></select>
+              </div>
+              <button class="btn btn-gray btn-sm" onclick="clearSubFilters()" style="align-self:flex-end;">✕ Clear</button>
+            </div>
           </div>
+          <div id="s-filter-badge" class="s-filter-badge" style="display:none;margin-bottom:6px;"></div>
           <div class="tbl-wrap"><table><thead><tr><th>#</th><th>Date & Time</th><th>Retailer ID</th><th>Retailer নাম</th><th>Outlet Code</th><th>Route Name</th><th>Phone</th><th>ভোক্তার নাম</th><th>Brand</th></tr></thead>
           <tbody id="s-tbody"><tr class="lr"><td colspan="9">⏳ লোড হচ্ছে...</td></tr></tbody></table></div>
         </div>
@@ -359,6 +459,32 @@ tbody td{padding:8px 12px;vertical-align:middle;}
   </div>
 </div>
 
+<!-- MOBILE BOTTOM NAV -->
+<div class="mob-bot-nav">
+  <div class="nav-tabs">
+    <button class="mob-bot-tab active" id="mbt-overview" onclick="showSec('overview');setMobTab('overview')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+      Overview
+    </button>
+    <button class="mob-bot-tab" id="mbt-routeperf" onclick="showSec('routeperf');setMobTab('routeperf')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>
+      Route
+    </button>
+    <button class="mob-bot-tab" id="mbt-retailers" onclick="showSec('retailers');setMobTab('retailers')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      Retailers
+    </button>
+    <button class="mob-bot-tab" id="mbt-submissions" onclick="showSec('submissions');setMobTab('submissions')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+      Submissions
+    </button>
+    <button class="mob-bot-tab" id="mbt-more" onclick="toggleMobMenu()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+      More
+    </button>
+  </div>
+</div>
+
 <!-- MOBILE SIDEBAR -->
 <div class="mob-sidebar" id="mobSidebar">
   <div class="mob-panel">
@@ -367,7 +493,12 @@ tbody td{padding:8px 12px;vertical-align:middle;}
       <h2>Admin Panel</h2>
     </div>
     <nav style="padding:8px;">
-      <button class="ni active" onclick="showSec('overview');closeMobMenu()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Overview</button>
+      <div class="nav-label">MAIN</div>
+      <button class="ni" onclick="showSec('overview');closeMobMenu()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Overview</button>
+      <div class="nav-label">PERFORMANCE</div>
+      <button class="ni" onclick="showSec('routeperf');closeMobMenu()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3l-.16.03L15 5.1 9 3 3.36 4.9c-.21.07-.36.25-.36.48V20.5c0 .28.22.5.5.5l.16-.03L9 18.9l6 2.1 5.64-1.9c.21-.07.36-.25.36-.48V3.5c0-.28-.22-.5-.5-.5zM15 19l-6-2.11V5l6 2.11V19z"/></svg>Route Performance</button>
+      <button class="ni" onclick="showSec('retailerperf');closeMobMenu()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>Retailer Performance</button>
+      <div class="nav-label">DATA</div>
       <button class="ni" onclick="showSec('retailers');closeMobMenu()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>All Retailers</button>
       <button class="ni" onclick="showSec('submissions');closeMobMenu()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>All Submissions</button>
     </nav>
@@ -408,6 +539,11 @@ auth.onAuthStateChanged(user=>{
   }
 });
 function toggleMobMenu(){document.getElementById('mobSidebar').classList.toggle('open');}
+function setMobTab(n){
+  document.querySelectorAll('.mob-bot-tab').forEach(t=>t.classList.remove('active'));
+  const el=document.getElementById('mbt-'+n);
+  if(el) el.classList.add('active');
+}
 function closeMobMenu(){document.getElementById('mobSidebar').classList.remove('open');}
 function doLogin(){
   const email=document.getElementById('loginEmail').value.trim(),pass=document.getElementById('loginPass').value.trim();
@@ -468,6 +604,12 @@ function renderOverview(){
   document.getElementById('ov-td').innerText=todayCnt;
   document.getElementById('ov-t').innerText=totalT;
   document.getElementById('ov-p').innerText=totalT>0?Math.round((totalS/totalT)*100)+'%':'—%';
+  // Pie chart
+  const remaining=Math.max(0,totalT-totalS);
+  drawPieChart(totalS,remaining,totalT);
+  document.getElementById('pie-done').innerText=totalS;
+  document.getElementById('pie-rem').innerText=remaining;
+  document.getElementById('pie-tgt').innerText=totalT;
 
   // Date bar chart
   document.getElementById('ov-mid').innerText=Math.round(D/2);
@@ -491,6 +633,7 @@ function renderOverview(){
   });
   renderRouteTable(routePerfData);
   renderPerfTable(rIds);
+  renderQuickOverview(rIds);
 }
 
 function renderPerfTable(ids){
@@ -524,6 +667,73 @@ function filterPerfTable(){
     return(!route||(r.route_name||'')===route)&&(!s||id.toLowerCase().includes(s)||(r.name||'').toLowerCase().includes(s)||(r.route_name||'').toLowerCase().includes(s));
   });
   renderPerfTable(ids);
+}
+
+function drawPieChart(done, remaining, target){
+  const canvas=document.getElementById('pieChart');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const cx=70,cy=70,r=60,innerR=36;
+  ctx.clearRect(0,0,140,140);
+  if(target===0){
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.fillStyle='#e5e7eb';ctx.fill();
+    ctx.beginPath();ctx.arc(cx,cy,innerR,0,Math.PI*2);
+    ctx.fillStyle='#fff';ctx.fill();
+    return;
+  }
+  const slices=[
+    {val:done,color:'#059669',label:'জমা'},
+    {val:remaining,color:'#dc2626',label:'বাকি'},
+  ].filter(s=>s.val>0);
+  const total=slices.reduce((a,s)=>a+s.val,0);
+  let startAngle=-Math.PI/2;
+  slices.forEach(s=>{
+    const angle=(s.val/total)*Math.PI*2;
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,startAngle,startAngle+angle);
+    ctx.closePath();ctx.fillStyle=s.color;ctx.fill();
+    startAngle+=angle;
+  });
+  // Donut hole
+  ctx.beginPath();ctx.arc(cx,cy,innerR,0,Math.PI*2);
+  ctx.fillStyle='#fff';ctx.fill();
+  // Center text
+  const pct=target>0?Math.round((done/target)*100):0;
+  ctx.fillStyle='#111827';ctx.font='bold 18px Inter,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(pct+'%',cx,cy-6);
+  ctx.font='10px Inter,sans-serif';ctx.fillStyle='#6b7280';ctx.fillText('Achievement',cx,cy+10);
+  // Legend
+  const leg=document.getElementById('pieLegend');
+  if(leg) leg.innerHTML=slices.map(s=>`<div style="display:flex;align-items:center;gap:7px;"><div style="width:11px;height:11px;border-radius:3px;background:${s.color};flex-shrink:0;"></div><span>${s.label}: <strong>${s.val}</strong></span></div>`).join('');
+}
+
+function renderQuickOverview(rIds){
+  // Top 5 routes
+  const qrBody=document.getElementById('ov-route-quick');
+  if(qrBody){
+    const top5routes=routePerfData.slice(0,5);
+    qrBody.innerHTML=top5routes.map(([rn,rv])=>{
+      const p=rv.target>0?Math.min(100,Math.round((rv.submitted/rv.target)*100)):0;
+      const col=p>=100?'var(--green)':p>=50?'var(--amber)':'var(--red)';
+      return `<tr><td style="font-weight:600;">${esc(rn)}</td><td><span class="b bg">${rv.submitted}</span></td><td style="font-weight:700;color:${col};">${p}%</td></tr>`;
+    }).join('')||'<tr class="er"><td colspan="3">কোনো data নেই</td></tr>';
+  }
+  // Top 10 retailers by submission
+  const qRetBody=document.getElementById('ov-ret-quick');
+  if(qRetBody){
+    const sorted=[...rIds].map(id=>{
+      const sub=Object.values((allS[id]||{})[curMY]||{}).length;
+      const r=allR[id]||{};
+      const target=parseInt(r.target)||0;
+      const p=target>0?Math.min(100,Math.round((sub/target)*100)):0;
+      return{id,name:r.name||id,route:r.route_name||'—',sub,target,p};
+    }).sort((a,b)=>b.sub-a.sub).slice(0,8);
+    qRetBody.innerHTML=sorted.map(r=>{
+      const col=r.p>=100?'var(--green)':r.p>=50?'var(--amber)':'var(--red)';
+      return `<tr><td><span class="b bb">${esc(r.id)}</span><br><span style="font-size:10px;color:var(--tx2);">${esc(r.name)}</span></td><td style="font-size:11px;">${esc(r.route)}</td><td><span class="b bg">${r.sub}</span></td><td style="font-weight:700;color:${col};">${r.p}%</td></tr>`;
+    }).join('')||'<tr class="er"><td colspan="4">কোনো data নেই</td></tr>';
+  }
 }
 
 function renderRouteTable(data){
@@ -719,53 +929,32 @@ function parseTime(t){
 
 function renderSubmissions(){
   subsFlat=[];
-  const selIds=['s-rfil','s-ocfil','s-rtfil','s-bfil','s-dfil','s-mfil','s-yfil'];
-  // Reset all dropdowns to only keep "All" option
-  selIds.forEach(id=>{
+  // Reset only route + brand dropdowns
+  ['s-rtfil','s-bfil'].forEach(id=>{
     const sel=document.getElementById(id);
-    while(sel.options.length>1) sel.remove(1);
+    if(sel) while(sel.options.length>1) sel.remove(1);
   });
-
-  // Collect all values first, then deduplicate → sorted dropdowns
-  const sets={r:new Map(),oc:new Map(),rt:new Map(),b:new Set(),d:new Set(),m:new Set(),y:new Set()};
+  const rtSet=new Set(), bSet=new Set();
 
   Object.keys(allS).forEach(rId=>{
     const r=allR[rId]||{};
-    sets.r.set(rId, r.name?r.name+' ('+rId+')':rId);
-    if(r.outlet_code) sets.oc.set(r.outlet_code,r.outlet_code);
-    if(r.route_name) sets.rt.set(r.route_name,r.route_name);
+    if(r.route_name) rtSet.add(r.route_name);
     Object.keys(allS[rId]).forEach(firebaseMY=>{
       Object.values(allS[rId][firebaseMY]).forEach(e=>{
         const{day,month,year}=parseTime(e.time);
-        // fallback month/year from firebase key
         let mo=month,yr=year;
         if(!mo&&firebaseMY){const p=firebaseMY.split('-');if(p.length===2){mo=parseInt(p[0]);yr=parseInt(p[1]);}}
         const my2=mo&&yr?String(mo).padStart(2,'0')+'-'+yr:firebaseMY;
         subsFlat.push({rId,rName:r.name||rId,outletCode:r.outlet_code||'',routeName:r.route_name||'',day,month:mo,year:yr,my:my2,...e});
-        if(e.brand) sets.b.add(e.brand);
-        if(day) sets.d.add(day);
-        if(mo) sets.m.add(mo);
-        if(yr) sets.y.add(yr);
+        if(e.brand) bSet.add(e.brand);
       });
     });
   });
 
-  // Populate dropdowns — sorted, unique
-  const rSel=document.getElementById('s-rfil');
-  [...sets.r.entries()].sort((a,b)=>a[0].localeCompare(b[0])).forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.innerText=t;rSel.appendChild(o);});
-  const ocSel=document.getElementById('s-ocfil');
-  [...sets.oc.keys()].sort().forEach(v=>{const o=document.createElement('option');o.value=v;o.innerText=v;ocSel.appendChild(o);});
   const rtSel=document.getElementById('s-rtfil');
-  [...sets.rt.keys()].sort().forEach(v=>{const o=document.createElement('option');o.value=v;o.innerText=v;rtSel.appendChild(o);});
+  [...rtSet].sort().forEach(v=>{const o=document.createElement('option');o.value=v;o.innerText=v;rtSel&&rtSel.appendChild(o);});
   const bSel=document.getElementById('s-bfil');
-  [...sets.b].sort().forEach(v=>{const o=document.createElement('option');o.value=v;o.innerText=v;bSel.appendChild(o);});
-  const dSel=document.getElementById('s-dfil');
-  [...sets.d].sort((a,b)=>a-b).forEach(v=>{const o=document.createElement('option');o.value=v;o.innerText=v+' তারিখ';dSel.appendChild(o);});
-  const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const mSel=document.getElementById('s-mfil');
-  [...sets.m].sort((a,b)=>a-b).forEach(v=>{const o=document.createElement('option');o.value=v;o.innerText=MN[v-1]+' ('+v+')';mSel.appendChild(o);});
-  const ySel=document.getElementById('s-yfil');
-  [...sets.y].sort((a,b)=>b-a).forEach(v=>{const o=document.createElement('option');o.value=v;o.innerText=v;ySel.appendChild(o);});
+  [...bSet].sort().forEach(v=>{const o=document.createElement('option');o.value=v;o.innerText=v;bSel&&bSel.appendChild(o);});
 
   document.getElementById('s-lbl').innerText=`মোট ${subsFlat.length} টি`;
   renderSubTable(subsFlat);
@@ -773,24 +962,57 @@ function renderSubmissions(){
 
 function filterSubs(){
   const s=document.getElementById('s-srch').value.toLowerCase();
-  const r=document.getElementById('s-rfil').value;
-  const oc=document.getElementById('s-ocfil').value;
   const rt=document.getElementById('s-rtfil').value;
   const b=document.getElementById('s-bfil').value;
-  const d=document.getElementById('s-dfil').value;
-  const m=document.getElementById('s-mfil').value;
-  const y=document.getElementById('s-yfil').value;
-  const filtered=subsFlat.filter(e=>
-    (!r||e.rId===r)&&
-    (!oc||e.outletCode===oc)&&
-    (!rt||e.routeName===rt)&&
-    (!b||e.brand===b)&&
-    (!d||String(e.day)===String(d))&&
-    (!m||String(e.month)===String(m))&&
-    (!y||String(e.year)===String(y))&&
-    (!s||(e.phone||'').includes(s)||(e.consumer_name||'').toLowerCase().includes(s)||(e.brand||'').toLowerCase().includes(s)||(e.rName||'').toLowerCase().includes(s)||(e.rId||'').toLowerCase().includes(s)||(e.outletCode||'').toLowerCase().includes(s))
-  );
+  const fromStr=document.getElementById('s-date-from').value; // yyyy-mm-dd
+  const toStr=document.getElementById('s-date-to').value;
+
+  // Parse filter dates
+  const fromDate=fromStr?new Date(fromStr+' 00:00:00'):null;
+  const toDate=toStr?new Date(toStr+' 23:59:59'):null;
+
+  const filtered=subsFlat.filter(e=>{
+    // Date range check using year/month/day
+    if(fromDate||toDate){
+      if(!e.year||!e.month||!e.day) return false;
+      const eDate=new Date(e.year,e.month-1,e.day);
+      if(fromDate&&eDate<fromDate) return false;
+      if(toDate&&eDate>toDate) return false;
+    }
+    if(rt&&e.routeName!==rt) return false;
+    if(b&&e.brand!==b) return false;
+    if(s&&!(
+      (e.phone||'').includes(s)||
+      (e.consumer_name||'').toLowerCase().includes(s)||
+      (e.brand||'').toLowerCase().includes(s)||
+      (e.rName||'').toLowerCase().includes(s)||
+      (e.rId||'').toLowerCase().includes(s)||
+      (e.outletCode||'').toLowerCase().includes(s)
+    )) return false;
+    return true;
+  });
+
+  // Show active filter badge
+  const badges=[];
+  if(fromStr||toStr) badges.push('📅 '+(fromStr||'…')+' → '+(toStr||'…'));
+  if(rt) badges.push('🗺️ '+rt);
+  if(b) badges.push('🏷️ '+b);
+  if(s) badges.push('🔍 "'+s+'"');
+  const bar=document.getElementById('s-filter-badge');
+  if(bar){ if(badges.length) {bar.innerText=filtered.length+' টি ফলাফল · '+badges.join(' · ');bar.style.display='inline-flex';} else bar.style.display='none'; }
+
   renderSubTable(filtered);
+}
+
+function clearSubFilters(){
+  document.getElementById('s-srch').value='';
+  document.getElementById('s-date-from').value='';
+  document.getElementById('s-date-to').value='';
+  document.getElementById('s-rtfil').value='';
+  document.getElementById('s-bfil').value='';
+  const bar=document.getElementById('s-filter-badge');
+  if(bar) bar.style.display='none';
+  renderSubTable(subsFlat);
 }
 
 function renderSubTable(data){
@@ -900,8 +1122,16 @@ function exportRetailersCSV(){
 }
 function exportSubsCSV(){
   const s=document.getElementById('s-srch').value.toLowerCase();
-  const r=document.getElementById('s-rfil').value,oc=document.getElementById('s-ocfil').value,rt=document.getElementById('s-rtfil').value,b=document.getElementById('s-bfil').value,d=document.getElementById('s-dfil').value,m=document.getElementById('s-mfil').value,y=document.getElementById('s-yfil').value;
-  const filtered=subsFlat.filter(e=>(!r||e.rId===r)&&(!oc||e.outletCode===oc)&&(!rt||e.routeName===rt)&&(!b||e.brand===b)&&(!d||String(e.day)===String(d))&&(!m||String(e.month)===String(m))&&(!y||String(e.year)===String(y))&&(!s||(e.phone||'').includes(s)||(e.consumer_name||'').toLowerCase().includes(s)||(e.brand||'').toLowerCase().includes(s)||(e.rName||'').toLowerCase().includes(s)||(e.rId||'').toLowerCase().includes(s)||(e.outletCode||'').toLowerCase().includes(s)));
+  const rt=document.getElementById('s-rtfil').value,b=document.getElementById('s-bfil').value;
+  const fromStr=document.getElementById('s-date-from').value,toStr=document.getElementById('s-date-to').value;
+  const fromDate=fromStr?new Date(fromStr+' 00:00:00'):null,toDate=toStr?new Date(toStr+' 23:59:59'):null;
+  const filtered=subsFlat.filter(e=>{
+    if(fromDate||toDate){if(!e.year||!e.month||!e.day)return false;const eDate=new Date(e.year,e.month-1,e.day);if(fromDate&&eDate<fromDate)return false;if(toDate&&eDate>toDate)return false;}
+    if(rt&&e.routeName!==rt)return false;
+    if(b&&e.brand!==b)return false;
+    if(s&&!((e.phone||'').includes(s)||(e.consumer_name||'').toLowerCase().includes(s)||(e.brand||'').toLowerCase().includes(s)||(e.rName||'').toLowerCase().includes(s)||(e.rId||'').toLowerCase().includes(s)||(e.outletCode||'').toLowerCase().includes(s)))return false;
+    return true;
+  });
   const MNC=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   let csv=csvRow(['#','Date & Time','Retailer ID','Retailer নাম','Outlet Code','Route Name','Phone','ভোক্তার নাম','Brand']);
